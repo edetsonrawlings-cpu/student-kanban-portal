@@ -1,0 +1,218 @@
+// ==========================================================
+// Student Portal — Prisma Schema
+// Datasource: Supabase Postgres
+// ==========================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL") // required for Supabase connection pooling
+}
+
+// -----------------------------
+// Enums
+// -----------------------------
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  DROPPED
+}
+
+enum SubmissionStatus {
+  NOT_SUBMITTED
+  SUBMITTED
+  LATE
+  GRADED
+}
+
+enum AnnouncementAudience {
+  ALL
+  COURSE
+}
+
+// -----------------------------
+// Core identity
+// -----------------------------
+
+// Mirrors Supabase's auth.users via a shared UUID (id).
+// This table is the "profile" row your app actually queries.
+model Profile {
+  id        String  @id @default(uuid()) // matches auth.users.id in Supabase
+  email     String  @unique
+  fullName  String
+  avatarUrl String?
+  role      Role    @default(STUDENT)
+
+  bio       String?
+  studentId String? @unique // school-issued ID, students only
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  enrollments        Enrollment[]
+  submissions        Submission[]
+  gradedSubmissions  Submission[]     @relation("GradedBy")
+  taughtCourses      Course[]         @relation("Instructor")
+  announcementsMade  Announcement[]
+  discussionPosts    DiscussionPost[]
+
+  @@map("profiles")
+}
+
+// -----------------------------
+// Courses
+// -----------------------------
+
+model Course {
+  id          String  @id @default(uuid())
+  code        String  @unique // e.g. "CS301"
+  title       String
+  description String?
+  coverColor  String  @default("#16233F") // hex used for course card accent
+  term        String // e.g. "Fall 2026"
+  credits     Int     @default(3)
+
+  instructorId String
+  instructor   Profile @relation("Instructor", fields: [instructorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  enrollments   Enrollment[]
+  materials     Material[]
+  assignments   Assignment[]
+  announcements Announcement[]
+  discussion    DiscussionPost[]
+
+  @@map("courses")
+}
+
+model Enrollment {
+  id       String           @id @default(uuid())
+  studentId String
+  student  Profile          @relation(fields: [studentId], references: [id])
+  courseId String
+  course   Course           @relation(fields: [courseId], references: [id])
+  status   EnrollmentStatus @default(ACTIVE)
+
+  enrolledAt DateTime @default(now())
+
+  @@unique([studentId, courseId])
+  @@map("enrollments")
+}
+
+model Material {
+  id          String   @id @default(uuid())
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+  title       String
+  description String?
+  fileUrl     String?
+  linkUrl     String?
+  uploadedAt  DateTime @default(now())
+
+  @@map("materials")
+}
+
+// -----------------------------
+// Assignments, submissions & grades
+// -----------------------------
+
+model Assignment {
+  id          String   @id @default(uuid())
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id])
+  title       String
+  description String?
+  instructions String?
+  maxPoints   Int      @default(100)
+  dueDate     DateTime
+  createdAt   DateTime @default(now())
+
+  submissions Submission[]
+
+  @@map("assignments")
+}
+
+model Submission {
+  id           String            @id @default(uuid())
+  assignmentId String
+  assignment   Assignment        @relation(fields: [assignmentId], references: [id])
+  studentId    String
+  student      Profile           @relation(fields: [studentId], references: [id])
+
+  status       SubmissionStatus  @default(NOT_SUBMITTED)
+  content      String? // text response
+  fileUrl      String? // uploaded file link
+  submittedAt  DateTime?
+
+  // Grading
+  grade        Grade?
+
+  @@unique([assignmentId, studentId])
+  @@map("submissions")
+}
+
+model Grade {
+  id           String   @id @default(uuid())
+  submissionId String   @unique
+  submission   Submission @relation(fields: [submissionId], references: [id])
+
+  pointsEarned Float
+  feedback     String?
+
+  gradedById   String
+  gradedBy     Profile  @relation("GradedBy", fields: [gradedById], references: [id])
+  gradedAt     DateTime @default(now())
+
+  @@map("grades")
+}
+
+// -----------------------------
+// Announcements & discussion
+// -----------------------------
+
+model Announcement {
+  id        String               @id @default(uuid())
+  title     String
+  body      String
+  audience  AnnouncementAudience @default(COURSE)
+
+  courseId  String?
+  course    Course?              @relation(fields: [courseId], references: [id])
+
+  authorId  String
+  author    Profile              @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime             @default(now())
+
+  @@map("announcements")
+}
+
+model DiscussionPost {
+  id        String   @id @default(uuid())
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id])
+  authorId  String
+  author    Profile  @relation(fields: [authorId], references: [id])
+
+  parentId  String? // self-relation for threaded replies
+  parent    DiscussionPost?  @relation("Replies", fields: [parentId], references: [id])
+  replies   DiscussionPost[] @relation("Replies")
+
+  body      String
+  createdAt DateTime @default(now())
+
+  @@map("discussion_posts")
+}
