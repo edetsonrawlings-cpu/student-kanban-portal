@@ -8,6 +8,7 @@ import {
   ClipboardList,
   GraduationCap,
   Megaphone,
+  Receipt,
   Settings,
   LogOut,
   ShieldCheck,
@@ -28,6 +29,7 @@ const navItems: NavItem[] = [
   { label: "Assignments", href: "/assignments", icon: ClipboardList, roles: ["STUDENT"] },
   { label: "Gradebook", href: "/gradebook", icon: GraduationCap, roles: ["STUDENT", "TEACHER"] },
   { label: "Announcements", href: "/announcements", icon: Megaphone, roles: ["STUDENT", "TEACHER", "ADMIN"] },
+  { label: "Fee Receipt", href: "/fee-receipt", icon: Receipt, roles: ["STUDENT"] },
   { label: "Admin", href: "/admin", icon: ShieldCheck, roles: ["ADMIN"] },
 ];
 
@@ -110,3 +112,7 @@ export function Sidebar({ role = "STUDENT", userName = "Ama Serwaa" }: SidebarPr
     </aside>
   );
 }
+
+// Default export provided alongside the named export above so both
+// `import Sidebar from "..."` and `import { Sidebar } from "..."` work.
+export default Sidebar;

@@ -51,3 +51,7 @@ export function DashboardLayout({
     </div>
   );
 }
+
+// Default export provided alongside the named export above so both
+// `import DashboardLayout from "..."` and `import { DashboardLayout } from "..."` work.
+export default DashboardLayout;
