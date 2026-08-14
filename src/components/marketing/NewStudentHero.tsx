@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, ArrowRight, ShieldCheck, Leaf } from "lucide-react";
 
@@ -154,7 +155,7 @@ export function NewStudentHero() {
             courses.
           </p>
           <a
-            href="#signup"
+            href="/dashboard"
             className="group mt-6 inline-flex items-center gap-2 rounded-full bg-[#E8792C] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#D4691F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E8792C] focus-visible:ring-offset-2"
           >
             Sign Up
