@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
 
 type Priority = "High" | "Medium" | "Low";
 type Status = "todo" | "in-progress" | "testing" | "done";
@@ -119,18 +120,20 @@ export default function KanbanPage() {
   };
 
   return (
-    <div className="p-8 space-y-6 max-w-7xl mx-auto">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Project Kanban Board</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">Track and manage tasks through development, testing, and completion.</p>
-      </div>
+    <DashboardLayout pageTitle="Assignments">
+      <div className="space-y-6">
+        <div>
+          <h2 className="font-serif text-2xl text-[#16233F]">Project Kanban Board</h2>
+          <p className="mt-1 text-sm text-[#6B7280]">Track and manage tasks through development, testing, and completion.</p>
+        </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {renderColumn("todo", "To Do", "bg-amber-500")}
-        {renderColumn("in-progress", "In Progress", "bg-blue-500")}
-        {renderColumn("testing", "Testing", "bg-purple-500")}
-        {renderColumn("done", "Done", "bg-emerald-500")}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {renderColumn("todo", "To Do", "bg-amber-500")}
+          {renderColumn("in-progress", "In Progress", "bg-blue-500")}
+          {renderColumn("testing", "Testing", "bg-purple-500")}
+          {renderColumn("done", "Done", "bg-emerald-500")}
+        </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }
