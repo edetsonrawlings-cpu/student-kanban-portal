@@ -1,3 +1,5 @@
+import { DashboardLayout } from "@/components/layout/DashboardLayout";
+
 export default function GradebookPage() {
   const grades = [
     { subject: "Web Development (Agile)", grade: "A", percentage: "95%" },
@@ -6,32 +8,34 @@ export default function GradebookPage() {
   ];
 
   return (
-    <div className="p-8 space-y-6 max-w-7xl mx-auto">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Gradebook</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">Track your academic performance and grades.</p>
-      </div>
+    <DashboardLayout pageTitle="Gradebook">
+      <div className="space-y-6">
+        <div>
+          <h2 className="font-serif text-2xl text-[#16233F]">Gradebook</h2>
+          <p className="mt-1 text-sm text-[#6B7280]">Track your academic performance and grades.</p>
+        </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-        <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-          <thead className="bg-slate-50 dark:bg-slate-800/50 text-xs text-slate-500 border-b border-slate-200 dark:border-slate-800">
-            <tr>
-              <th className="p-4">Subject</th>
-              <th className="p-4">Grade</th>
-              <th className="p-4">Score</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-            {grades.map((g, i) => (
-              <tr key={i}>
-                <td className="p-4 font-medium text-slate-900 dark:text-slate-100">{g.subject}</td>
-                <td className="p-4 font-bold text-emerald-600">{g.grade}</td>
-                <td className="p-4">{g.percentage}</td>
+        <div className="bg-white rounded-xl border border-[#E4E2DA] overflow-hidden shadow-sm">
+          <table className="w-full text-left text-sm text-[#6B7280]">
+            <thead className="bg-[#FAFAF8] text-xs text-[#6B7280] border-b border-[#E4E2DA]">
+              <tr>
+                <th className="p-4">Subject</th>
+                <th className="p-4">Grade</th>
+                <th className="p-4">Score</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="divide-y divide-[#E4E2DA]">
+              {grades.map((g) => (
+                <tr key={g.subject}>
+                  <td className="p-4 font-medium text-[#16233F]">{g.subject}</td>
+                  <td className="p-4 font-bold text-emerald-600">{g.grade}</td>
+                  <td className="p-4">{g.percentage}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

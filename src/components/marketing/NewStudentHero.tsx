@@ -28,14 +28,14 @@ export function UniversityHeader() {
     <header className="relative z-20 border-b border-black/5 bg-[#FBF9F3]">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
         {/* Logo */}
-        <a href="/" className="flex items-center gap-2.5">
+        <Link href="/" className="flex items-center gap-2.5">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#1F3A2E] text-[#E8F0EA]">
             <ShieldCheck size={18} strokeWidth={2} />
           </span>
           <span className="font-serif text-[15px] font-semibold leading-tight text-[#1F3A2E] sm:text-base">
             The ICT University
           </span>
-        </a>
+        </Link>
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-8 md:flex">
