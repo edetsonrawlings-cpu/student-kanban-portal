@@ -1,13 +1,6 @@
 import { Megaphone } from "lucide-react";
+import { timeAgo } from "@/lib/utils";
 import type { Announcement } from "@/types";
-
-function timeAgo(iso: string): string {
-  const diffMs = Date.now() - new Date(iso).getTime();
-  const hours = Math.floor(diffMs / (1000 * 60 * 60));
-  if (hours < 1) return "just now";
-  if (hours < 24) return `${hours}h ago`;
-  return `${Math.floor(hours / 24)}d ago`;
-}
 
 interface AnnouncementsFeedProps {
   announcements: Announcement[];
@@ -17,8 +10,8 @@ export function AnnouncementsFeed({ announcements }: AnnouncementsFeedProps) {
   return (
     <div className="rounded-lg border border-[#E4E2DA] bg-white">
       <div className="flex items-center gap-2 border-b border-[#E4E2DA] px-5 py-4">
-        <Megaphone size={17} strokeWidth={1.75} className="text-[#C9A227]" />
-        <h2 className="font-serif text-base text-[#16233F]">Recent Announcements</h2>
+        <Megaphone size={17} strokeWidth={1.75} className="text-[#C9A227]" aria-hidden />
+        <h3 className="font-serif text-base text-[#16233F]">Latest updates</h3>
       </div>
       <ul className="divide-y divide-[#F0EEE7]">
         {announcements.map((a) => (
