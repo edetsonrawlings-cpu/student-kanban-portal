@@ -12,3 +12,20 @@
 body {
   background-color: #fafaf8;
 }
+
+/* Printing is used by the fee receipt: drop the portal chrome from the page. */
+@media print {
+  aside,
+  header,
+  nav {
+    display: none !important;
+  }
+
+  main {
+    padding: 0 !important;
+  }
+
+  body {
+    background-color: #ffffff;
+  }
+}

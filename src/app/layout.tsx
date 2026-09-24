@@ -14,8 +14,16 @@ const bodyFont = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Student Portal",
+  title: {
+    default: "Student Portal",
+    template: "%s · Student Portal",
+  },
   description: "Courses, assignments, and grades in one place.",
+  openGraph: {
+    title: "Student Portal",
+    description: "Courses, assignments, and grades in one place.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

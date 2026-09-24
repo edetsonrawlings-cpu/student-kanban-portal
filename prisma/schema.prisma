@@ -7,10 +7,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Prisma 7 no longer accepts connection URLs here: `DATABASE_URL` (pooled) and
+// `DIRECT_URL` (direct, required by Supabase for migrations) live in
+// `prisma.config.ts` and in the driver adapter in `src/lib/prisma.ts`.
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL") // required for Supabase connection pooling
+  provider = "postgresql"
 }
 
 // -----------------------------
@@ -62,7 +63,7 @@ model Profile {
   // Relations
   enrollments        Enrollment[]
   submissions        Submission[]
-  gradedSubmissions  Submission[]     @relation("GradedBy")
+  gradedGrades       Grade[]          @relation("GradedBy")
   taughtCourses      Course[]         @relation("Instructor")
   announcementsMade  Announcement[]
   discussionPosts    DiscussionPost[]
