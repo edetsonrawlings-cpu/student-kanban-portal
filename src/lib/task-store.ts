@@ -11,8 +11,16 @@ import type { KanbanTask } from "@/types";
  * both sides while still restoring the saved board.
  */
 const STORAGE_KEY = "student-kanban-portal:tasks:v2";
+const CHANNEL_NAME = "student-kanban-portal:tasks";
 
 const listeners = new Set<() => void>();
+const channel = typeof window !== "undefined" && "BroadcastChannel" in window
+  ? new BroadcastChannel(CHANNEL_NAME)
+  : null;
+
+function notifyListeners(): void {
+  for (const listener of listeners) listener();
+}
 
 function readStoredTasks(): KanbanTask[] | null {
   try {
@@ -29,6 +37,26 @@ let snapshot: KanbanTask[] = mockKanbanTasks;
 
 if (typeof window !== "undefined") {
   snapshot = readStoredTasks() ?? mockKanbanTasks;
+
+  window.addEventListener("storage", (event) => {
+    if (event.key !== STORAGE_KEY || !event.newValue) return;
+    let nextTasks: KanbanTask[] | null;
+    try {
+      nextTasks = parseTasks(JSON.parse(event.newValue));
+    } catch {
+      return;
+    }
+    if (!nextTasks) return;
+    snapshot = nextTasks;
+    notifyListeners();
+  });
+
+  channel?.addEventListener("message", (event: MessageEvent<unknown>) => {
+    const nextTasks = parseTasks(event.data);
+    if (!nextTasks) return;
+    snapshot = nextTasks;
+    notifyListeners();
+  });
 }
 
 export function subscribeToTasks(listener: () => void): () => void {
@@ -51,11 +79,12 @@ export function setTasks(update: (current: KanbanTask[]) => KanbanTask[]): void 
 
   try {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+    channel?.postMessage(snapshot);
   } catch {
     // Storage full or blocked (private mode): keep the board usable in memory.
   }
 
-  for (const listener of listeners) listener();
+  notifyListeners();
 }
 
 export function resetTasks(): void {
