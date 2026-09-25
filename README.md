@@ -148,11 +148,11 @@ created, deleted, dragged between columns or moved with arrow buttons.
 For teachers, the same route is an assignment publisher whose deadlines feed the student dashboard.
 Both workflows persist locally.
 
-## Database (not connected yet)
+## Database
 
 1. Set `DATABASE_URL` (pooled) and `DIRECT_URL` (direct connection, used by migrations) in a
-   `.env` file — it is git-ignored.
-2. `npx prisma migrate dev`
+  `.env` file — it is git-ignored.
+2. `npx prisma migrate deploy` applies the versioned migrations in `prisma/migrations`.
 3. `npx prisma db seed` — loads the same content as `src/lib/mock-data.ts`.
 
 Prisma 7 no longer accepts connection URLs in `schema.prisma`: the CLI reads them from
@@ -161,9 +161,12 @@ configured in `src/lib/prisma.ts`.
 
 ## Deploying to Vercel
 
-Import the repository on Vercel and keep the defaults — framework, build command and install
-command are detected automatically. Add `DATABASE_URL` and `DIRECT_URL` to the project
-environment variables only once a page actually queries the database.
+Import the repository on Vercel and keep the Next.js framework. The build command runs
+`prisma migrate deploy && next build`, so Vercel creates or updates the Prisma tables during each
+deployment. Add `DATABASE_URL` and `DIRECT_URL` to the project environment variables for every
+environment before deploying. Vercel does not provision the PostgreSQL server itself; create it
+first with Supabase, Neon, or another PostgreSQL provider. Run `npx prisma db seed` once manually
+against that database if demo data is needed.
 
 ## Roadmap
 
