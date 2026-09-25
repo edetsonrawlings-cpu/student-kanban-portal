@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Menu, X, ArrowRight, ShieldCheck, Leaf } from "lucide-react";
+import { Menu, X, ArrowRight, ExternalLink, ShieldCheck, Leaf } from "lucide-react";
 
 /**
  * NewStudentHero
@@ -15,10 +15,10 @@ import { Menu, X, ArrowRight, ShieldCheck, Leaf } from "lucide-react";
  */
 
 const navLinks = [
-  { label: "About", href: "#about" },
-  { label: "Programs", href: "#programs" },
-  { label: "Admissions", href: "#admissions" },
-  { label: "Contact", href: "#contact" },
+  { label: "About", href: "https://ictuniversity.org/" },
+  { label: "Programs", href: "https://ictuniversity.org/programmes/" },
+  { label: "Admissions", href: "https://ictuniversity.org/apply-to-ictu/" },
+  { label: "Contact", href: "mailto:admin@ictuniversity.edu.cm" },
 ];
 
 export function UniversityHeader() {
@@ -43,20 +43,24 @@ export function UniversityHeader() {
             <a
               key={link.label}
               href={link.href}
-              className="text-sm font-medium text-[#3F4A44] transition-colors hover:text-[#E8792C]"
+              target={link.href.startsWith("https:") ? "_blank" : undefined}
+              rel="noopener noreferrer"
+              title={link.href.startsWith("https:") ? "Official university website (opens in a new tab)" : "Email the university"}
+              className="inline-flex items-center gap-1 text-sm font-medium text-[#3F4A44] transition-colors hover:text-[#E8792C]"
             >
               {link.label}
+              {link.href.startsWith("https:") && <ExternalLink size={12} aria-hidden />}
             </a>
           ))}
         </nav>
 
         <div className="hidden md:block">
-          <a
-            href="#login"
+          <Link
+            href="/dashboard"
             className="rounded-full border border-[#1F3A2E]/15 px-4 py-2 text-sm font-medium text-[#1F3A2E] transition-colors hover:bg-[#1F3A2E]/5"
           >
-            Log In
-          </a>
+            Open Demo Portal
+          </Link>
         </div>
 
         {/* Mobile hamburger */}
@@ -79,19 +83,23 @@ export function UniversityHeader() {
               <a
                 key={link.label}
                 href={link.href}
+                target={link.href.startsWith("https:") ? "_blank" : undefined}
+                rel="noopener noreferrer"
+                title={link.href.startsWith("https:") ? "Official university website (opens in a new tab)" : "Email the university"}
                 onClick={() => setOpen(false)}
-                className="rounded-md px-2 py-2.5 text-sm font-medium text-[#3F4A44] hover:bg-[#1F3A2E]/5"
+                className="flex items-center gap-1 rounded-md px-2 py-2.5 text-sm font-medium text-[#3F4A44] hover:bg-[#1F3A2E]/5"
               >
                 {link.label}
+                {link.href.startsWith("https:") && <ExternalLink size={12} aria-hidden />}
               </a>
             ))}
-            <a
-              href="#login"
+            <Link
+              href="/dashboard"
               onClick={() => setOpen(false)}
               className="mt-2 rounded-full border border-[#1F3A2E]/15 px-4 py-2.5 text-center text-sm font-medium text-[#1F3A2E]"
             >
-              Log In
-            </a>
+              Open Demo Portal
+            </Link>
           </nav>
         </div>
       )}
@@ -155,10 +163,13 @@ export function NewStudentHero() {
             courses.
           </p>
           <a
-            href="/dashboard"
+            href="https://studentportal.ictuniversity.edu.cm/portal-sign-up/"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Apply on the official university portal (opens in a new tab)"
             className="group mt-6 inline-flex items-center gap-2 rounded-full bg-[#E8792C] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-[#D4691F] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E8792C] focus-visible:ring-offset-2"
           >
-            Sign Up
+            Apply Now
             <ArrowRight
               size={16}
               strokeWidth={2.25}

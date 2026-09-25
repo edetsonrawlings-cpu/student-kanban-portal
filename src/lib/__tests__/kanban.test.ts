@@ -1,11 +1,15 @@
 import { describe, expect, it } from "vitest";
 import {
   addTask,
+  canMoveTaskToStatus,
+  countTasksInStatus,
+  DEFAULT_KANBAN_LIMITS,
   filterTasks,
   getNextStatus,
   getPrevStatus,
   KANBAN_COLUMNS,
   moveTask,
+  parseKanbanLimits,
   parseTasks,
   removeTask,
   sortByDueDate,
@@ -75,6 +79,18 @@ describe("board mutations", () => {
     expect(next).toHaveLength(3);
     expect(tasks).toHaveLength(2);
   });
+
+  it("blocks entry into a full column but still allows tasks to leave it", () => {
+    const limits = { ...DEFAULT_KANBAN_LIMITS, "in-progress": 1 };
+    const limitedTasks = [
+      task({ id: "todo", status: "todo" }),
+      task({ id: "active", status: "in-progress" }),
+    ];
+
+    expect(countTasksInStatus(limitedTasks, "in-progress")).toBe(1);
+    expect(canMoveTaskToStatus(limitedTasks, "todo", "in-progress", limits)).toBe(false);
+    expect(canMoveTaskToStatus(limitedTasks, "active", "testing", limits)).toBe(true);
+  });
 });
 
 describe("filterTasks", () => {
@@ -131,5 +147,18 @@ describe("parseTasks", () => {
 
   it("drops unknown extra properties", () => {
     expect(parseTasks([{ ...task(), rogue: "value" }])).toEqual([task()]);
+  });
+});
+
+describe("parseKanbanLimits", () => {
+  it("accepts one positive integer limit for every column", () => {
+    expect(parseKanbanLimits(DEFAULT_KANBAN_LIMITS)).toEqual(DEFAULT_KANBAN_LIMITS);
+  });
+
+  it("rejects missing, fractional, or out-of-range limits", () => {
+    expect(parseKanbanLimits({ todo: 3 })).toBeNull();
+    expect(parseKanbanLimits({ ...DEFAULT_KANBAN_LIMITS, testing: 1.5 })).toBeNull();
+    expect(parseKanbanLimits({ ...DEFAULT_KANBAN_LIMITS, done: 0 })).toBeNull();
+    expect(parseKanbanLimits({ ...DEFAULT_KANBAN_LIMITS, done: 100 })).toBeNull();
   });
 });

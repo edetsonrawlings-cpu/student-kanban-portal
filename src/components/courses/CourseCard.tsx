@@ -4,9 +4,10 @@ import type { Course } from "@/types";
 
 interface CourseCardProps {
   course: Course;
+  progressLabel?: string;
 }
 
-export function CourseCard({ course }: CourseCardProps) {
+export function CourseCard({ course, progressLabel = "Progress" }: Readonly<CourseCardProps>) {
   return (
     <Link
       href={`/courses/${course.id}`}
@@ -35,7 +36,7 @@ export function CourseCard({ course }: CourseCardProps) {
         {/* Progress */}
         <div>
           <div className="mb-1 flex items-center justify-between text-xs text-[#9CA3AF]">
-            <span>Progress</span>
+            <span>{progressLabel}</span>
             <span>{course.progress}%</span>
           </div>
           <div className="h-1.5 w-full overflow-hidden rounded-full bg-[#EFEDE6]">

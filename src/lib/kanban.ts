@@ -1,4 +1,4 @@
-import type { KanbanStatus, KanbanTask, TaskPriority } from "@/types";
+import type { KanbanLimits, KanbanStatus, KanbanTask, TaskPriority } from "@/types";
 
 export const KANBAN_COLUMNS: { status: KanbanStatus; title: string; dot: string }[] = [
   { status: "todo", title: "To Do", dot: "bg-amber-500" },
@@ -8,6 +8,13 @@ export const KANBAN_COLUMNS: { status: KanbanStatus; title: string; dot: string 
 ];
 
 const ORDER: KanbanStatus[] = KANBAN_COLUMNS.map((column) => column.status);
+
+export const DEFAULT_KANBAN_LIMITS: KanbanLimits = {
+  todo: 8,
+  "in-progress": 6,
+  testing: 6,
+  done: 20,
+};
 
 export const TASK_PRIORITIES: TaskPriority[] = ["High", "Medium", "Low"];
 
@@ -27,6 +34,22 @@ export function moveTask(
   status: KanbanStatus
 ): KanbanTask[] {
   return tasks.map((task) => (task.id === id ? { ...task, status } : task));
+}
+
+export function countTasksInStatus(tasks: KanbanTask[], status: KanbanStatus): number {
+  return tasks.filter((task) => task.status === status).length;
+}
+
+export function canMoveTaskToStatus(
+  tasks: KanbanTask[],
+  taskId: string,
+  targetStatus: KanbanStatus,
+  limits: KanbanLimits
+): boolean {
+  const task = tasks.find((item) => item.id === taskId);
+  if (!task) return false;
+  if (task.status === targetStatus) return true;
+  return countTasksInStatus(tasks, targetStatus) < limits[targetStatus];
 }
 
 export function removeTask(tasks: KanbanTask[], id: string): KanbanTask[] {
@@ -91,4 +114,20 @@ export function parseTasks(value: unknown): KanbanTask[] | null {
   }
 
   return tasks;
+}
+
+export function parseKanbanLimits(value: unknown): KanbanLimits | null {
+  if (typeof value !== "object" || value === null) return null;
+  const candidate = value as Partial<Record<KanbanStatus, unknown>>;
+  const limits = {} as KanbanLimits;
+
+  for (const status of ORDER) {
+    const limit = candidate[status];
+    if (!Number.isInteger(limit) || (limit as number) < 1 || (limit as number) > 99) {
+      return null;
+    }
+    limits[status] = limit as number;
+  }
+
+  return limits;
 }

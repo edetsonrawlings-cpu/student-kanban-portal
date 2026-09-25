@@ -1,5 +1,20 @@
 import { describe, expect, it } from "vitest";
+import { isRole } from "@/lib/demo-role-store";
 import { getPageTitle, isActivePath, navItems, visibleNavItems } from "@/lib/nav";
+
+describe("isRole", () => {
+  it("accepts the three demo roles", () => {
+    expect(isRole("STUDENT")).toBe(true);
+    expect(isRole("TEACHER")).toBe(true);
+    expect(isRole("ADMIN")).toBe(true);
+  });
+
+  it("rejects unknown or malformed values", () => {
+    expect(isRole("SUPER_ADMIN")).toBe(false);
+    expect(isRole("student")).toBe(false);
+    expect(isRole(null)).toBe(false);
+  });
+});
 
 describe("visibleNavItems", () => {
   it("hides student-only entries from an admin", () => {
@@ -15,7 +30,12 @@ describe("visibleNavItems", () => {
     expect(labels).not.toContain("Admin");
   });
 
-  it("only ever returns known items", () => {
+  it("shows teaching tools without student finance or administration", () => {
+    const labels = visibleNavItems("TEACHER").map((item) => item.label);
+    expect(labels).toContain("Assignments");
+    expect(labels).toContain("Gradebook");
+    expect(labels).not.toContain("Fee Receipt");
+    expect(labels).not.toContain("Admin");
     expect(visibleNavItems("TEACHER").every((item) => navItems.includes(item))).toBe(true);
   });
 });
@@ -47,6 +67,6 @@ describe("getPageTitle", () => {
   });
 
   it("falls back for an unknown route", () => {
-    expect(getPageTitle("/nowhere")).toBe("Student Portal");
+    expect(getPageTitle("/nowhere")).toBe("Campus Portal");
   });
 });

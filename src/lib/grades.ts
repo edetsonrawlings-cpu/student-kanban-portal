@@ -19,6 +19,19 @@ export function gradePoints(letter: LetterGrade): number {
   return GRADE_POINTS[letter];
 }
 
+export function percentageToLetterGrade(percentage: number): LetterGrade {
+  if (percentage >= 93) return "A";
+  if (percentage >= 90) return "A-";
+  if (percentage >= 87) return "B+";
+  if (percentage >= 83) return "B";
+  if (percentage >= 80) return "B-";
+  if (percentage >= 77) return "C+";
+  if (percentage >= 73) return "C";
+  if (percentage >= 70) return "C-";
+  if (percentage >= 60) return "D";
+  return "F";
+}
+
 /**
  * Credit-weighted GPA. Courses without a matching grade entry are ignored so
  * the average never silently counts a course as a zero.

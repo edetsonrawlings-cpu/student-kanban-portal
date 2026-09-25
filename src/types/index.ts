@@ -1,5 +1,14 @@
 export type Role = "STUDENT" | "TEACHER" | "ADMIN";
 
+export interface DemoProfile {
+  name: string;
+  email: string;
+  identifier: string;
+  affiliation: string;
+  role: Role;
+  term: string;
+}
+
 export interface StudentProfile {
   name: string;
   studentId: string;
@@ -13,6 +22,8 @@ export interface Course {
   code: string;
   title: string;
   instructor: string;
+  instructorId?: string;
+  studentIds?: string[];
   term: string;
   coverColor: string;
   progress: number; // 0-100
@@ -39,6 +50,8 @@ export interface AssignmentSummary {
  * date helpers in `@/lib/utils` work on both.
  */
 export type KanbanStatus = "todo" | "in-progress" | "testing" | "done";
+
+export type KanbanLimits = Record<KanbanStatus, number>;
 
 export type TaskPriority = "High" | "Medium" | "Low";
 
@@ -76,6 +89,32 @@ export interface GradeEntry {
   courseCode: string;
   letter: LetterGrade;
   percentage: number; // 0-100
+}
+
+export interface TeacherGradeRecord {
+  id: string;
+  studentId: string;
+  studentName: string;
+  courseCode: string;
+  percentage: number | null;
+}
+
+export interface DemoPortalUser {
+  id: string;
+  name: string;
+  email: string;
+  identifier?: string;
+  role: Role;
+  department: string;
+  status: "ACTIVE" | "SUSPENDED";
+}
+
+export interface DemoWorkspace {
+  announcements: Announcement[];
+  assignments: AssignmentSummary[];
+  courses: Course[];
+  teacherGrades: TeacherGradeRecord[];
+  users: DemoPortalUser[];
 }
 
 export interface StudentSummary {

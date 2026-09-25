@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calculateGpa, gradePoints } from "@/lib/grades";
+import { calculateGpa, gradePoints, percentageToLetterGrade } from "@/lib/grades";
 import type { Course, GradeEntry } from "@/types";
 
 function course(code: string, credits: number): Course {
@@ -54,5 +54,15 @@ describe("gradePoints", () => {
     expect(gradePoints("A")).toBe(4);
     expect(gradePoints("B+")).toBe(3.3);
     expect(gradePoints("F")).toBe(0);
+  });
+});
+
+describe("percentageToLetterGrade", () => {
+  it("maps boundary percentages onto the letter scale", () => {
+    expect(percentageToLetterGrade(93)).toBe("A");
+    expect(percentageToLetterGrade(90)).toBe("A-");
+    expect(percentageToLetterGrade(87)).toBe("B+");
+    expect(percentageToLetterGrade(60)).toBe("D");
+    expect(percentageToLetterGrade(59)).toBe("F");
   });
 });

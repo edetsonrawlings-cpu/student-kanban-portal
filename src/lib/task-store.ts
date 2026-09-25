@@ -10,7 +10,7 @@ import type { KanbanTask } from "@/types";
  * only then swaps in the browser snapshot, which keeps the markup identical on
  * both sides while still restoring the saved board.
  */
-const STORAGE_KEY = "student-kanban-portal:tasks:v1";
+const STORAGE_KEY = "student-kanban-portal:tasks:v2";
 
 const listeners = new Set<() => void>();
 
@@ -56,4 +56,8 @@ export function setTasks(update: (current: KanbanTask[]) => KanbanTask[]): void 
   }
 
   for (const listener of listeners) listener();
+}
+
+export function resetTasks(): void {
+  setTasks(() => mockKanbanTasks);
 }

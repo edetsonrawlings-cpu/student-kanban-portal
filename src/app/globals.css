@@ -13,6 +13,75 @@ body {
   background-color: #fafaf8;
 }
 
+.field-input {
+  margin-top: 0.25rem;
+  width: 100%;
+  border-radius: 0.375rem;
+  border: 1px solid #e4e2da;
+  background: #ffffff;
+  padding: 0.5rem 0.625rem;
+  color: #16233f;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  outline: none;
+}
+
+.field-input:focus {
+  border-color: #2f4470;
+  box-shadow: 0 0 0 2px rgb(47 68 112 / 15%);
+}
+
+.portal-progress {
+  appearance: none;
+  border: 0;
+  background: #e4e2da;
+}
+
+.portal-progress::-webkit-progress-bar {
+  border-radius: 9999px;
+  background: #e4e2da;
+}
+
+.portal-progress::-webkit-progress-value,
+.portal-progress::-moz-progress-bar {
+  border-radius: 9999px;
+  background: #059669;
+}
+
+html[data-presentation="true"] .portal-sidebar,
+html[data-presentation="true"] .portal-search,
+html[data-presentation="true"] .portal-menu-trigger {
+  display: none;
+}
+
+html[data-presentation="true"] .portal-main {
+  padding: 1.5rem;
+}
+
+html[data-presentation="true"] .portal-topbar {
+  padding-inline: 1.5rem;
+}
+
+html[data-presentation="true"] .kanban-card-title {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+html[data-presentation="true"] .kanban-card-meta {
+  font-size: 0.8125rem;
+  line-height: 1.125rem;
+}
+
+@media (min-width: 1024px) {
+  html[data-presentation="true"] .kanban-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  html[data-presentation="true"] .kanban-column {
+    min-height: calc(100vh - 15rem);
+  }
+}
+
 /* Printing is used by the fee receipt: drop the portal chrome from the page. */
 @media print {
   aside,

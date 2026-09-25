@@ -24,7 +24,7 @@ const ALL_ROLES: Role[] = ["STUDENT", "TEACHER", "ADMIN"];
 export const navItems: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard, roles: ALL_ROLES },
   { label: "Courses", href: "/courses", icon: BookOpen, roles: ALL_ROLES },
-  { label: "Assignments", href: "/assignments", icon: ClipboardList, roles: ["STUDENT"] },
+  { label: "Assignments", href: "/assignments", icon: ClipboardList, roles: ["STUDENT", "TEACHER"] },
   { label: "Gradebook", href: "/gradebook", icon: GraduationCap, roles: ["STUDENT", "TEACHER"] },
   { label: "Announcements", href: "/announcements", icon: Megaphone, roles: ALL_ROLES },
   { label: "Fee Receipt", href: "/fee-receipt", icon: Receipt, roles: ["STUDENT"] },
@@ -53,5 +53,5 @@ export function isActivePath(pathname: string | null | undefined, href: string):
 
 export function getPageTitle(pathname: string | null | undefined): string {
   const match = [...navItems, settingsNavItem].find((item) => isActivePath(pathname, item.href));
-  return match?.label ?? "Student Portal";
+  return match?.label ?? "Campus Portal";
 }

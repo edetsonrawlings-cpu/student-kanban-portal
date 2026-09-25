@@ -15,18 +15,18 @@ const bodyFont = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Student Portal",
-    template: "%s · Student Portal",
+    default: "Campus Portal",
+    template: "%s · Campus Portal",
   },
-  description: "Courses, assignments, and grades in one place.",
+  description: "Student, teacher, and administrator demo portals in one place.",
   openGraph: {
-    title: "Student Portal",
-    description: "Courses, assignments, and grades in one place.",
+    title: "Campus Portal",
+    description: "Student, teacher, and administrator demo portals in one place.",
     type: "website",
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={`${displayFont.variable} ${bodyFont.variable}`}>
       <body className="font-sans antialiased">{children}</body>

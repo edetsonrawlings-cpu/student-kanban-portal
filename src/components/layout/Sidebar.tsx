@@ -2,24 +2,23 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { isActivePath, settingsNavItem, visibleNavItems } from "@/lib/nav";
-import type { Role } from "@/types";
+import { useDemoProfile } from "@/lib/use-demo-profile";
 
 interface SidebarProps {
-  role: Role;
-  userName: string;
   className?: string;
   /** Called after a nav link is followed, so the mobile drawer can close. */
   onNavigate?: () => void;
 }
 
-export function Sidebar({ role, userName, className, onNavigate }: SidebarProps) {
+export function Sidebar({ className, onNavigate }: Readonly<SidebarProps>) {
   const pathname = usePathname();
-  const items = visibleNavItems(role);
+  const profile = useDemoProfile();
+  const items = visibleNavItems(profile.role);
   const SettingsIcon = settingsNavItem.icon;
-  const initials = userName
+  const initials = profile.name
     .split(" ")
     .map((part) => part[0])
     .join("");
@@ -34,9 +33,9 @@ export function Sidebar({ role, userName, className, onNavigate }: SidebarProps)
       {/* Brand mark */}
       <div className="flex items-center gap-2 border-b border-white/10 px-6 py-5">
         <div className="flex h-8 w-8 items-center justify-center rounded-full border border-[#C9A227] font-serif text-sm font-semibold text-[#C9A227]">
-          SP
+          CP
         </div>
-        <span className="font-serif text-lg tracking-wide">Student Portal</span>
+        <span className="font-serif text-lg tracking-wide">Campus Portal</span>
       </div>
 
       {/* Nav */}
@@ -79,14 +78,13 @@ export function Sidebar({ role, userName, className, onNavigate }: SidebarProps)
           <SettingsIcon size={18} strokeWidth={1.75} className="text-[#8B93A8]" />
           {settingsNavItem.label}
         </Link>
-        {/* Sign-out is inert until authentication is wired up (see README). */}
         <Link
           href="/"
           onClick={onNavigate}
           className="mt-1 flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-sm text-[#CBD2E0] hover:bg-white/5 hover:text-white"
         >
-          <LogOut size={18} strokeWidth={1.75} className="text-[#8B93A8]" />
-          Sign out
+          <ArrowLeft size={18} strokeWidth={1.75} className="text-[#8B93A8]" />
+          Back to home
         </Link>
 
         <div className="mt-4 flex items-center gap-3 rounded-md bg-white/5 px-3 py-2.5">
@@ -94,8 +92,10 @@ export function Sidebar({ role, userName, className, onNavigate }: SidebarProps)
             {initials}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-sm font-medium text-white">{userName}</p>
-            <p className="truncate text-xs capitalize text-[#8B93A8]">{role.toLowerCase()}</p>
+            <p className="truncate text-sm font-medium text-white">{profile.name}</p>
+            <p className="truncate text-xs capitalize text-[#8B93A8]">
+              {profile.role.toLowerCase()} demo
+            </p>
           </div>
         </div>
       </div>
